@@ -1,6 +1,5 @@
-from flask import Flask, render_template, request, jsonify
-
-app = Flask(__name__)
+import streamlit as st
+import pandas as pd
 
 # Thailand Digital Savings Account Data (updated April 2026)
 ACCOUNTS = [
