@@ -1,483 +1,1129 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Thai Digital Savings — Rate Comparison 2026</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<title>SavingsCompare</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+
 <style>
-  :root {
-    --bg: #0B0F1A;
-    --surface: #131929;
-    --card: #1A2235;
-    --border: #242D45;
-    --gold: #D4A843;
-    --gold2: #F0C060;
-    --teal: #00C9A7;
-    --text: #E8EDF7;
-    --muted: #7A8AA8;
-    --radius: 16px;
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
 
-  /* Background grid */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(212,168,67,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(212,168,67,0.03) 1px, transparent 1px);
-    background-size: 40px 40px;
-    pointer-events: none;
-    z-index: 0;
-  }
+/* ======================================================
+   ROOT
+====================================================== */
 
-  .wrapper { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+:root{
 
-  /* Header */
-  header {
-    padding: 56px 0 32px;
-    border-bottom: 1px solid var(--border);
-  }
-  .header-inner { display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
-  .header-tag {
-    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
-    color: var(--gold); font-weight: 600; margin-bottom: 12px;
-  }
-  h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(32px, 5vw, 58px);
-    font-weight: 900;
-    line-height: 1.05;
-    color: var(--text);
-  }
-  h1 span { color: var(--gold); }
-  .header-sub {
-    font-size: 14px; color: var(--muted); margin-top: 10px; font-weight: 400; line-height: 1.6;
-  }
-  .update-badge {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: rgba(212,168,67,0.1); border: 1px solid rgba(212,168,67,0.25);
-    border-radius: 99px; padding: 8px 16px;
-    font-size: 12px; color: var(--gold); font-weight: 500; white-space: nowrap;
-  }
-  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--teal); animation: pulse 2s infinite; }
-  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.4)} }
+    --bg:#F7FAFF;
+    --bg-soft:#EEF4FF;
 
-  /* Calculator Section */
-  .calc-section {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 36px 40px;
-    margin: 40px 0 48px;
-    position: relative;
-    overflow: hidden;
-  }
-  .calc-section::before {
-    content: '฿';
-    position: absolute; right: 32px; top: -10px;
-    font-size: 140px; font-weight: 900; color: rgba(212,168,67,0.04);
-    font-family: 'Playfair Display', serif;
-    line-height: 1; pointer-events: none;
-  }
-  .calc-title { font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); font-weight: 600; margin-bottom: 20px; }
-  .calc-row { display: flex; align-items: flex-end; gap: 20px; flex-wrap: wrap; }
-  .input-group { flex: 1; min-width: 240px; }
-  .input-group label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 8px; font-weight: 500; }
-  .input-wrap { position: relative; }
-  .input-wrap .currency { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--gold); font-weight: 700; font-size: 18px; }
-  .amount-input {
-    width: 100%; background: var(--card); border: 1px solid var(--border);
-    border-radius: 12px; padding: 16px 16px 16px 40px;
-    font-size: 22px; font-weight: 600; color: var(--text);
-    font-family: 'DM Sans', sans-serif; outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
-  }
-  .amount-input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(212,168,67,0.15); }
-  .amount-input::placeholder { color: var(--muted); font-weight: 400; font-size: 18px; }
-  .quick-amounts { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
-  .quick-btn {
-    background: rgba(212,168,67,0.08); border: 1px solid rgba(212,168,67,0.2);
-    color: var(--gold); border-radius: 8px; padding: 6px 14px;
-    font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;
-    font-family: 'DM Sans', sans-serif;
-  }
-  .quick-btn:hover { background: rgba(212,168,67,0.18); border-color: var(--gold); }
-  .calc-btn {
-    background: linear-gradient(135deg, var(--gold), var(--gold2));
-    color: #1A1200; border: none; border-radius: 12px;
-    padding: 16px 36px; font-size: 15px; font-weight: 700;
-    cursor: pointer; transition: all 0.2s; white-space: nowrap;
-    font-family: 'DM Sans', sans-serif; letter-spacing: 0.5px;
-  }
-  .calc-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(212,168,67,0.35); }
-  .calc-btn:active { transform: translateY(0); }
+    --white:#FFFFFF;
 
-  /* Separator */
-  .section-head { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
-  .section-head h2 { font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); font-weight: 600; white-space: nowrap; }
-  .section-line { flex: 1; height: 1px; background: var(--border); }
+    --primary:#5B8CFF;
+    --primary-dark:#4A7DFF;
 
-  /* Results Banner */
-  #results-banner {
-    display: none;
-    background: linear-gradient(135deg, rgba(0,201,167,0.1), rgba(212,168,67,0.1));
-    border: 1px solid rgba(0,201,167,0.25);
-    border-radius: var(--radius);
-    padding: 24px 32px;
-    margin-bottom: 32px;
-    animation: fadeIn 0.4s ease;
-  }
-  @keyframes fadeIn { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
-  .result-summary { font-size: 14px; color: var(--muted); margin-bottom: 4px; }
-  .result-amount { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; color: var(--gold2); }
-  .result-highlight { color: var(--teal); font-weight: 700; }
-  .result-note { font-size: 12px; color: var(--muted); margin-top: 6px; }
+    --text:#243B53;
+    --text-soft:#7B8794;
 
-  /* Cards Grid */
-  .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; margin-bottom: 60px; }
+    --border:#E6EDF7;
 
-  .bank-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-    transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
-    animation: cardIn 0.4s ease both;
-    position: relative;
-  }
-  @keyframes cardIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
-  .bank-card:hover { transform: translateY(-4px); box-shadow: 0 20px 48px rgba(0,0,0,0.4); border-color: rgba(212,168,67,0.25); }
-  .bank-card.rank-1 { border-color: var(--gold); box-shadow: 0 0 0 1px rgba(212,168,67,0.3), 0 8px 32px rgba(212,168,67,0.1); }
-  .bank-card.rank-1::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(212,168,67,0.05), transparent 60%); pointer-events:none; }
+    --success:#31B56A;
 
-  .card-accent { height: 4px; }
-  .card-body { padding: 24px; }
+    --shadow:
+    0 8px 30px rgba(15,23,42,.05);
 
-  .card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 20px; }
-  .bank-logo {
-    width: 44px; height: 44px; border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px; font-weight: 900; color: #fff;
-    font-family: 'Playfair Display', serif; flex-shrink: 0;
-  }
-  .card-name { flex: 1; margin-left: 14px; }
-  .card-name .bank { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); font-weight: 600; margin-bottom: 2px; }
-  .card-name .account { font-size: 15px; font-weight: 600; color: var(--text); line-height: 1.3; }
-  .rank-badge {
-    font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 99px;
-    color: #1A1200; background: var(--gold); white-space: nowrap;
-  }
-  .rank-badge.rank-2 { background: #9BA8BE; color: #0B0F1A; }
-  .rank-badge.rank-3 { background: #C47B3A; color: #fff; }
-  .rank-badge.rank-other { background: var(--border); color: var(--muted); font-weight: 500; }
+    --shadow-soft:
+    0 4px 18px rgba(15,23,42,.04);
 
-  .rate-display { display: flex; align-items: baseline; gap: 4px; margin: 0 0 16px; }
-  .rate-num { font-family: 'Playfair Display', serif; font-size: 42px; font-weight: 900; line-height: 1; }
-  .rate-unit { font-size: 16px; color: var(--muted); font-weight: 500; }
-  .rate-label { font-size: 11px; color: var(--muted); margin-left: 2px; letter-spacing: 1px; }
+    --radius:30px;
+}
 
-  .card-divider { height: 1px; background: var(--border); margin: 16px 0; }
+/* ======================================================
+   RESET
+====================================================== */
 
-  .info-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-  .info-row:last-child { margin-bottom: 0; }
-  .info-label { font-size: 12px; color: var(--muted); font-weight: 500; }
-  .info-val { font-size: 12px; color: var(--text); font-weight: 600; text-align: right; }
-  .info-val.teal { color: var(--teal); }
-  .badge-pill {
-    display: inline-block; font-size: 10px; padding: 3px 9px; border-radius: 99px;
-    font-weight: 600; letter-spacing: 0.5px;
-  }
-  .badge-pill.yes { background: rgba(0,201,167,0.15); color: var(--teal); }
-  .badge-pill.no { background: rgba(255,90,90,0.1); color: #FF7070; }
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 
-  .card-badge {
-    font-size: 11px; font-weight: 600; color: var(--gold);
-    background: rgba(212,168,67,0.1); border: 1px solid rgba(212,168,67,0.2);
-    border-radius: 8px; padding: 6px 12px; margin-top: 14px;
-    display: inline-block;
-  }
+    font-family:
+    'IBM Plex Sans Thai',
+    sans-serif;
+}
 
-  /* Interest result overlay inside card */
-  .interest-result {
-    display: none;
-    background: rgba(0,201,167,0.06);
-    border: 1px solid rgba(0,201,167,0.2);
-    border-radius: 10px;
-    padding: 14px 16px;
-    margin-top: 14px;
-    animation: fadeIn 0.3s ease;
-  }
-  .interest-result.show { display: block; }
-  .ir-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-  .ir-row:last-child { margin-bottom: 0; }
-  .ir-label { font-size: 12px; color: var(--muted); }
-  .ir-val { font-size: 14px; font-weight: 700; color: var(--teal); }
-  .ir-val.net { color: var(--gold2); }
+/* ======================================================
+   BODY
+====================================================== */
 
-  /* Top ranker crown */
-  .crown { font-size: 14px; margin-right: 4px; }
+body{
 
-  /* Footer */
-  footer {
-    border-top: 1px solid var(--border); padding: 32px 0;
-    text-align: center; color: var(--muted); font-size: 12px; line-height: 1.8;
-  }
-  footer a { color: var(--gold); text-decoration: none; }
+    background:
+    linear-gradient(
+        180deg,
+        var(--bg) 0%,
+        var(--bg-soft) 100%
+    );
 
-  /* Disclaimer */
-  .disclaimer {
-    background: rgba(212,168,67,0.04); border: 1px solid rgba(212,168,67,0.12);
-    border-radius: 12px; padding: 16px 20px; margin-bottom: 40px;
-    font-size: 12px; color: var(--muted); line-height: 1.7;
-  }
-  .disclaimer strong { color: var(--gold); }
+    color:var(--text);
 
-  @media(max-width: 640px) {
-    .calc-section { padding: 24px 20px; }
-    .cards-grid { grid-template-columns: 1fr; }
-    .header-inner { flex-direction: column; align-items: flex-start; }
-  }
-</style>
-</head>
-<body>
-<div class="wrapper">
+    min-height:100vh;
 
-  <!-- Header -->
-  <header>
-    <div class="header-inner">
-      <div>
-        <div class="header-tag">🇹🇭 Thailand — Digital Savings 2026</div>
-        <h1>Find Your <span>Best Rate.</span><br>Save Smarter.</h1>
-        <p class="header-sub">Compare high-interest digital savings accounts across all major Thai banks.<br>Enter your amount to see exactly how much you'll earn.</p>
-      </div>
-      <div class="update-badge">
-        <span class="dot"></span>
-        Updated April 2026
-      </div>
-    </div>
-  </header>
+    overflow-x:hidden;
+}
 
-  <!-- Calculator -->
-  <div class="calc-section" style="margin-top: 40px;">
-    <div class="calc-title">💰 Calculate Your Savings Return</div>
-    <div class="calc-row">
-      <div class="input-group">
-        <label>Enter your savings amount (THB)</label>
-        <div class="input-wrap">
-          <span class="currency">฿</span>
-          <input type="number" class="amount-input" id="amountInput" placeholder="e.g. 500,000" min="0" step="1000">
-        </div>
-        <div class="quick-amounts">
-          <button class="quick-btn" onclick="setAmount(50000)">฿50K</button>
-          <button class="quick-btn" onclick="setAmount(100000)">฿100K</button>
-          <button class="quick-btn" onclick="setAmount(300000)">฿300K</button>
-          <button class="quick-btn" onclick="setAmount(500000)">฿500K</button>
-          <button class="quick-btn" onclick="setAmount(1000000)">฿1M</button>
-          <button class="quick-btn" onclick="setAmount(2000000)">฿2M</button>
-        </div>
-      </div>
-      <button class="calc-btn" onclick="calculate()">Calculate →</button>
-    </div>
-  </div>
+/* ======================================================
+   GLOW
+====================================================== */
 
-  <!-- Results Banner (shown after calculate) -->
-  <div id="results-banner">
-    <div class="result-summary">Your savings of <strong id="banner-amount">—</strong> could earn up to:</div>
-    <div class="result-amount"><span id="banner-interest">—</span> <span style="font-size:16px;color:var(--muted)">per year</span></div>
-    <div class="result-note">
-      🏆 Best option: <span id="banner-best" class="result-highlight">—</span>
-      &nbsp;·&nbsp; 💸 Monthly return: <span id="banner-monthly" class="result-highlight">—</span>
-    </div>
-  </div>
+.bg-glow{
 
-  <!-- Cards -->
-  <div class="section-head">
-    <h2>All Accounts</h2>
-    <div class="section-line"></div>
-    <span style="font-size:12px;color:var(--muted);white-space:nowrap">{{ accounts|length }} accounts compared</span>
-  </div>
+    position:fixed;
 
-  <div class="cards-grid" id="cardsGrid">
-    {% for acc in accounts %}
-    <div class="bank-card" id="card-{{ loop.index0 }}" style="animation-delay: {{ loop.index0 * 0.06 }}s">
-      <div class="card-accent" style="background: {{ acc.color }};"></div>
-      <div class="card-body">
-        <div class="card-header">
-          <div class="bank-logo" style="background: {{ acc.color }};">{{ acc.logo_letter }}</div>
-          <div class="card-name">
-            <div class="bank">{{ acc.bank }}</div>
-            <div class="account">{{ acc.account }}</div>
-          </div>
-          <div class="rank-badge rank-other" id="rank-{{ loop.index0 }}">—</div>
-        </div>
+    border-radius:999px;
 
-        <div class="rate-display">
-          <span class="rate-num" style="color: {{ acc.color }};">{{ acc.highlight_rate }}</span>
-          <span class="rate-unit">%</span>
-          <span class="rate-label">P.A.</span>
-        </div>
+    filter:blur(120px);
 
-        <div class="card-divider"></div>
+    opacity:.06;
 
-        <div class="info-row">
-          <span class="info-label">Max balance for top rate</span>
-          <span class="info-val">฿{{ "{:,.0f}".format(acc.max_cap) if acc.max_cap < 1e10 else "Unlimited" }}</span>
-        </div>
-        <div class="info-row">
-          <span class="info-label">Interest paid</span>
-          <span class="info-val">{{ acc.interest_freq }}</span>
-        </div>
-        <div class="info-row">
-          <span class="info-label">App / Platform</span>
-          <span class="info-val">{{ acc.app }}</span>
-        </div>
-        <div class="info-row">
-          <span class="info-label">Open online</span>
-          <span class="info-val">
-            {% if acc.open_online %}<span class="badge-pill yes">✓ Yes</span>{% else %}<span class="badge-pill no">Branch only</span>{% endif %}
-          </span>
-        </div>
-        <div class="info-row">
-          <span class="info-label">DPA Protected</span>
-          <span class="info-val">
-            {% if acc.dpa_protected %}<span class="badge-pill yes">✓ up to ฿1M</span>{% else %}<span class="badge-pill no">No</span>{% endif %}
-          </span>
-        </div>
+    z-index:-1;
+}
 
-        <div class="card-badge">{{ acc.badge }}</div>
+.glow-1{
 
-        <!-- Interest Result Block (shown after calc) -->
-        <div class="interest-result" id="result-{{ loop.index0 }}">
-          <div class="ir-row">
-            <span class="ir-label">Yearly interest (gross)</span>
-            <span class="ir-val" id="ir-yearly-{{ loop.index0 }}">—</span>
-          </div>
-          <div class="ir-row">
-            <span class="ir-label">Monthly income</span>
-            <span class="ir-val" id="ir-monthly-{{ loop.index0 }}">—</span>
-          </div>
-          <div class="ir-row">
-            <span class="ir-label">Net interest (after tax)</span>
-            <span class="ir-val net" id="ir-net-{{ loop.index0 }}">—</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    {% endfor %}
-  </div>
+    width:400px;
+    height:400px;
 
-  <!-- Disclaimer -->
-  <div class="disclaimer">
-    <strong>⚠️ Important:</strong> Interest rates are sourced from official bank announcements as of <strong>April 2026</strong> and may change without notice. Rates shown are for individual Thai nationals unless stated otherwise. Interest income above ฿20,000/year is subject to <strong>15% withholding tax</strong>. Deposits are protected by the Deposit Protection Agency (DPA) up to <strong>฿1,000,000</strong> per person per bank. Always verify current rates directly with the bank before making a decision. This tool is for informational purposes only and does not constitute financial advice.
-  </div>
+    background:#A9C4FF;
 
-  <footer>
-    <p>Thai Digital Savings Rate Comparison · Data sources: official bank websites &amp; Bank of Thailand</p>
-    <p>Rates effective April 2026 · <a href="https://www.dpa.or.th" target="_blank">DPA Protection Info</a> · Not financial advice</p>
-  </footer>
-</div>
+    top:-180px;
+    right:-100px;
+}
 
-<script>
-  // Store account data for ranking
-  const accountData = {{ accounts | tojson }};
-  let calculatedResults = null;
+.glow-2{
 
-  function setAmount(val) {
-    document.getElementById('amountInput').value = val;
-    calculate();
-  }
+    width:320px;
+    height:320px;
 
-  function formatTHB(n) {
-    return '฿' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  }
+    background:#DDE7FF;
 
-  async function calculate() {
-    const input = document.getElementById('amountInput');
-    const amount = parseFloat(input.value);
-    if (!amount || amount <= 0) {
-      input.focus();
-      input.style.borderColor = '#FF7070';
-      setTimeout(() => input.style.borderColor = '', 1500);
-      return;
+    bottom:-120px;
+    left:-100px;
+}
+
+/* ======================================================
+   NAVBAR
+====================================================== */
+
+.navbar{
+
+    background:
+    rgba(255,255,255,.72);
+
+    backdrop-filter:blur(8px);
+
+    border:1px solid var(--border);
+
+    border-radius:28px;
+
+    box-shadow:var(--shadow-soft);
+}
+
+/* ======================================================
+   CARD
+====================================================== */
+
+.card{
+
+    background:
+    rgba(255,255,255,.82);
+
+    backdrop-filter:blur(8px);
+
+    border:1px solid var(--border);
+
+    border-radius:var(--radius);
+
+    box-shadow:var(--shadow);
+}
+
+/* ======================================================
+   HERO
+====================================================== */
+
+.hero{
+
+    position:relative;
+
+    overflow:hidden;
+}
+
+.hero::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:500px;
+    height:500px;
+
+    border-radius:999px;
+
+    background:
+    radial-gradient(
+        rgba(91,140,255,.10),
+        transparent 70%
+    );
+
+    right:-200px;
+    top:-200px;
+}
+
+/* ======================================================
+   LOGO
+====================================================== */
+
+.logo{
+
+    background:
+    linear-gradient(
+        135deg,
+        var(--primary),
+        var(--primary-dark)
+    );
+
+    box-shadow:
+    0 10px 25px rgba(91,140,255,.18);
+}
+
+/* ======================================================
+   BADGE
+====================================================== */
+
+.badge{
+
+    background:
+    rgba(91,140,255,.10);
+
+    color:var(--primary-dark);
+
+    border:1px solid rgba(91,140,255,.12);
+}
+
+/* ======================================================
+   TYPOGRAPHY
+====================================================== */
+
+.hero-title{
+
+    font-size:64px;
+
+    line-height:1.05;
+
+    letter-spacing:-2px;
+
+    font-weight:800;
+
+    color:var(--text);
+}
+
+.hero-subtitle{
+
+    font-size:18px;
+
+    line-height:1.9;
+
+    color:var(--text-soft);
+
+    max-width:620px;
+}
+
+/* ======================================================
+   INPUT
+====================================================== */
+
+.fin-input{
+
+    width:100%;
+
+    background:#fff;
+
+    border:1px solid var(--border);
+
+    border-radius:22px;
+
+    padding:18px 20px;
+
+    font-size:18px;
+
+    font-weight:600;
+
+    transition:.2s ease;
+}
+
+.fin-input:focus{
+
+    outline:none;
+
+    border-color:var(--primary);
+
+    box-shadow:
+    0 0 0 5px rgba(91,140,255,.10);
+}
+
+/* ======================================================
+   BUTTON
+====================================================== */
+
+.primary-btn{
+
+    width:100%;
+
+    background:
+    linear-gradient(
+        135deg,
+        var(--primary),
+        var(--primary-dark)
+    );
+
+    color:white;
+
+    border:none;
+
+    border-radius:22px;
+
+    padding:18px;
+
+    font-weight:700;
+
+    font-size:16px;
+
+    cursor:pointer;
+
+    transition:.25s ease;
+
+    box-shadow:
+    0 10px 24px rgba(91,140,255,.16);
+}
+
+.primary-btn:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:
+    0 16px 35px rgba(91,140,255,.20);
+}
+
+/* ======================================================
+   SUMMARY
+====================================================== */
+
+.summary{
+
+    background:
+    rgba(255,255,255,.85);
+
+    border:1px solid var(--border);
+
+    border-radius:28px;
+
+    padding:30px;
+
+    box-shadow:var(--shadow-soft);
+}
+
+.summary-dark{
+
+    background:
+    linear-gradient(
+        135deg,
+        #243B53,
+        #334E68
+    );
+
+    color:white;
+}
+
+.summary-label{
+
+    font-size:12px;
+
+    text-transform:uppercase;
+
+    letter-spacing:1px;
+
+    font-weight:700;
+
+    opacity:.7;
+
+    margin-bottom:10px;
+}
+
+.summary-value{
+
+    font-size:42px;
+
+    font-weight:800;
+
+    letter-spacing:-1px;
+}
+
+/* ======================================================
+   RESULT
+====================================================== */
+
+.result-card{
+
+    background:
+    rgba(255,255,255,.85);
+
+    border:1px solid var(--border);
+
+    border-radius:30px;
+
+    padding:28px;
+
+    box-shadow:var(--shadow-soft);
+
+    transition:.25s ease;
+}
+
+.result-card:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:
+    0 16px 40px rgba(15,23,42,.06);
+}
+
+/* ======================================================
+   METRIC
+====================================================== */
+
+.metric{
+
+    background:#FAFCFF;
+
+    border:1px solid var(--border);
+
+    border-radius:24px;
+
+    padding:22px;
+}
+
+/* ======================================================
+   BREAKDOWN
+====================================================== */
+
+.breakdown{
+
+    background:#F8FBFF;
+
+    border:1px solid var(--border);
+
+    border-radius:24px;
+
+    padding:22px;
+}
+
+/* ======================================================
+   MOBILE
+====================================================== */
+
+@media(max-width:768px){
+
+    .hero-title{
+
+        font-size:42px;
     }
 
-    const res = await fetch('/calculate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ amount })
+    .hero-subtitle{
+
+        font-size:16px;
+    }
+
+    .hero-image{
+
+        margin-top:10px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="bg-glow glow-1"></div>
+<div class="bg-glow glow-2"></div>
+
+<!-- NAVBAR -->
+
+<header class="py-6">
+
+    <div class="max-w-7xl mx-auto px-4">
+
+        <div class="navbar px-6 py-5 flex flex-col sm:flex-row justify-between items-center gap-4">
+
+            <div class="flex items-center gap-4">
+
+                <div class="logo p-3 rounded-2xl text-white">
+
+                    <i data-lucide="wallet" class="w-7 h-7"></i>
+
+                </div>
+
+                <div>
+
+                    <h1 class="text-2xl font-bold">
+
+                        SavingsCompare
+
+                    </h1>
+
+                    <p class="text-sm text-slate-500">
+
+                        เปรียบเทียบและวางแผนการออมดิจิทัล
+
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="text-sm text-slate-500 bg-white px-4 py-2 rounded-full border border-slate-100">
+
+                ข้อมูลดอกเบี้ยอัปเดตล่าสุด
+
+            </div>
+
+        </div>
+
+    </div>
+
+</header>
+
+<!-- HERO -->
+
+<section class="max-w-7xl mx-auto px-4 pb-8">
+
+    <div class="card hero p-10 lg:p-16">
+
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+
+            <div>
+
+                <div class="badge inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold mb-6">
+
+                    ✨ Smart Savings Planner
+
+                </div>
+
+                <h2 class="hero-title">
+
+                    วางแผนการออม<br>
+                    ให้ได้ดอกเบี้ยสูงสุด
+
+                </h2>
+
+                <p class="hero-subtitle mt-6">
+
+                    เครื่องมือช่วยเปรียบเทียบบัญชีออมทรัพย์ดิจิทัล
+                    พร้อมคำนวณการกระจายเงินฝากอัตโนมัติ
+                    เพื่อให้คุณได้รับผลตอบแทนดีที่สุด
+
+                </p>
+
+            </div>
+
+            <div class="hero-image flex justify-center">
+
+                <img
+                    src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                    class="w-full max-w-[430px] drop-shadow-xl"
+                >
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- MAIN -->
+
+<main class="max-w-7xl mx-auto px-4 pb-14 grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+    <!-- LEFT -->
+
+    <section class="lg:col-span-4">
+
+        <div class="card p-7 sticky top-6">
+
+            <div class="flex items-center gap-4 mb-8">
+
+                <div class="bg-blue-100 text-blue-600 p-3 rounded-2xl">
+
+                    <i data-lucide="piggy-bank" class="w-6 h-6"></i>
+
+                </div>
+
+                <div>
+
+                    <h3 class="text-2xl font-bold">
+
+                        ข้อมูลการออม
+
+                    </h3>
+
+                    <p class="text-sm text-slate-500">
+
+                        กรอกข้อมูลเพื่อเริ่มคำนวณ
+
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="space-y-5">
+
+                <div>
+
+                    <label class="block text-sm font-semibold mb-2">
+
+                        จำนวนเงินออมทั้งหมด
+
+                    </label>
+
+                    <input
+                        type="number"
+                        id="totalSavings"
+                        value="100000"
+                        class="fin-input"
+                    >
+
+                </div>
+
+                <div>
+
+                    <label class="block text-sm font-semibold mb-2">
+
+                        ระยะเวลาการฝาก
+
+                    </label>
+
+                    <select
+                        id="months"
+                        class="fin-input"
+                    >
+
+                        <option value="3">3 เดือน</option>
+                        <option value="6">6 เดือน</option>
+                        <option value="12" selected>12 เดือน</option>
+                        <option value="24">24 เดือน</option>
+
+                    </select>
+
+                </div>
+
+                <button
+                    onclick="runAllocation()"
+                    class="primary-btn flex items-center justify-center gap-2"
+                >
+
+                    <i data-lucide="sparkles" class="w-5 h-5"></i>
+
+                    วิเคราะห์การจัดสรรเงิน
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- RIGHT -->
+
+    <section class="lg:col-span-8 flex flex-col gap-6">
+
+        <!-- SUMMARY -->
+
+        <div class="grid sm:grid-cols-2 gap-6">
+
+            <div class="summary">
+
+                <div class="summary-label">
+
+                    เงินต้นรวมทั้งหมด
+
+                </div>
+
+                <div
+                    id="dashboardPrincipal"
+                    class="summary-value"
+                >
+
+                    ฿100,000
+
+                </div>
+
+            </div>
+
+            <div class="summary summary-dark">
+
+                <div class="summary-label text-emerald-300">
+
+                    ดอกเบี้ยรวมที่ได้รับ
+
+                </div>
+
+                <div
+                    id="dashboardTotalInterest"
+                    class="summary-value text-emerald-300"
+                >
+
+                    ฿0.00
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- RESULT -->
+
+        <div
+            id="resultPanel"
+            class="flex flex-col gap-6"
+        ></div>
+
+    </section>
+
+</main>
+
+<script>
+
+/* ======================================================
+   ICONS
+====================================================== */
+
+lucide.createIcons();
+
+/* ======================================================
+   DATABASE
+====================================================== */
+
+const BANK_DATABASE = [
+
+    {
+        name:"Dime! Save",
+        shortName:"D",
+        colorTheme:"bg-violet-500",
+
+        tiers:[
+            { min:0, max:10000, rate:3.0 },
+            { min:10000, max:1000000, rate:1.5 },
+            { min:1000000, max:Infinity, rate:0.5 }
+        ]
+    },
+
+    {
+        name:"LH Bank B-You Max",
+        shortName:"LH",
+        colorTheme:"bg-cyan-500",
+
+        tiers:[
+            { min:0, max:10000, rate:3.0 },
+            { min:10000, max:Infinity, rate:0.25 }
+        ]
+    },
+
+    {
+        name:"CIMB Chill D",
+        shortName:"C",
+        colorTheme:"bg-rose-500",
+
+        tiers:[
+            { min:0, max:10000, rate:0.5 },
+            { min:10000, max:50000, rate:1.0 },
+            { min:50000, max:100000, rate:2.7 },
+            { min:100000, max:Infinity, rate:0.2 }
+        ]
+    },
+
+    {
+        name:"ttb ME save",
+        shortName:"ME",
+        colorTheme:"bg-orange-400",
+
+        tiers:[
+            { min:0, max:100000, rate:1.8 },
+            { min:100000, max:1000000, rate:1.2 },
+            { min:1000000, max:Infinity, rate:1.0 }
+        ]
+    },
+
+    {
+        name:"MAKE by KBank",
+        shortName:"M",
+        colorTheme:"bg-emerald-500",
+
+        tiers:[
+            { min:0, max:500000, rate:1.35 },
+            { min:500000, max:Infinity, rate:0.35 }
+        ]
+    }
+
+];
+
+/* ======================================================
+   RUN ALLOCATION
+====================================================== */
+
+function runAllocation(){
+
+    const totalSavings =
+    parseFloat(
+        document.getElementById(
+            "totalSavings"
+        ).value
+    );
+
+    const months =
+    parseInt(
+        document.getElementById(
+            "months"
+        ).value
+    );
+
+    let flattened = [];
+
+    BANK_DATABASE.forEach(bank=>{
+
+        bank.tiers.forEach(tier=>{
+
+            flattened.push({
+
+                bankName:bank.name,
+
+                shortName:bank.shortName,
+
+                colorTheme:bank.colorTheme,
+
+                min:tier.min,
+
+                max:tier.max,
+
+                rate:tier.rate,
+
+                capacity:
+                    tier.max === Infinity
+                    ? Infinity
+                    : tier.max - tier.min,
+
+                allocated:0
+
+            });
+
+        });
+
     });
-    const data = await res.json();
-    calculatedResults = data.results;
 
-    // Show results banner
-    const banner = document.getElementById('results-banner');
-    banner.style.display = 'block';
-    document.getElementById('banner-amount').textContent = formatTHB(amount);
-    document.getElementById('banner-interest').textContent = formatTHB(data.results[0].yearly);
-    document.getElementById('banner-best').textContent = data.results[0].account;
-    document.getElementById('banner-monthly').textContent = formatTHB(data.results[0].monthly);
+    flattened.sort(
+        (a,b)=> b.rate - a.rate
+    );
 
-    // Update cards — first, build a mapping from account name to result
-    const resultMap = {};
-    data.results.forEach((r, idx) => { resultMap[r.account] = { ...r, rank: idx + 1 }; });
+    let remaining = totalSavings;
 
-    // Sort cards grid by rank
-    const grid = document.getElementById('cardsGrid');
-    const cards = Array.from(grid.querySelectorAll('.bank-card'));
-    
-    cards.sort((a, b) => {
-      const idA = parseInt(a.id.split('-')[1]);
-      const idB = parseInt(b.id.split('-')[1]);
-      const accA = accountData[idA].account;
-      const accB = accountData[idB].account;
-      const rankA = resultMap[accA] ? resultMap[accA].rank : 999;
-      const rankB = resultMap[accB] ? resultMap[accB].rank : 999;
-      return rankA - rankB;
-    });
-    cards.forEach((card, i) => {
-      card.style.animationDelay = (i * 0.05) + 's';
-      grid.appendChild(card);
+    flattened.forEach(tier=>{
+
+        if(remaining <= 0) return;
+
+        const fill =
+        tier.capacity === Infinity
+        ? remaining
+        : Math.min(
+            remaining,
+            tier.capacity
+        );
+
+        tier.allocated = fill;
+
+        remaining -= fill;
+
     });
 
-    // Update each card
-    accountData.forEach((acc, idx) => {
-      const r = resultMap[acc.account];
-      if (!r) return;
+    let grouped = {};
 
-      const card = document.getElementById('card-' + idx);
-      const rankEl = document.getElementById('rank-' + idx);
-      const resultEl = document.getElementById('result-' + idx);
+    flattened.forEach(tier=>{
 
-      // Rank badge
-      rankEl.textContent = r.rank <= 3 ? ['🥇 #1', '🥈 #2', '🥉 #3'][r.rank - 1] : '#' + r.rank;
-      rankEl.className = 'rank-badge ' + (r.rank <= 3 ? 'rank-' + r.rank : 'rank-other');
+        if(tier.allocated <= 0) return;
 
-      // Card highlight
-      card.className = 'bank-card' + (r.rank === 1 ? ' rank-1' : '');
+        if(!grouped[tier.bankName]){
 
-      // Interest results
-      document.getElementById('ir-yearly-' + idx).textContent = formatTHB(r.yearly);
-      document.getElementById('ir-monthly-' + idx).textContent = formatTHB(r.monthly);
-      document.getElementById('ir-net-' + idx).textContent = formatTHB(r.net_yearly) + (r.tax_exempt ? ' (tax-free)' : ' (after 15% tax)');
-      resultEl.classList.add('show');
+            grouped[tier.bankName] = {
+
+                name:tier.bankName,
+
+                shortName:tier.shortName,
+
+                colorTheme:tier.colorTheme,
+
+                totalAlloc:0,
+
+                totalInterest:0,
+
+                breakdown:[]
+
+            };
+
+        }
+
+        const interest =
+        (
+            tier.allocated *
+            (tier.rate/100)
+        ) *
+        (months/12);
+
+        grouped[tier.bankName]
+        .totalAlloc += tier.allocated;
+
+        grouped[tier.bankName]
+        .totalInterest += interest;
+
+        grouped[tier.bankName]
+        .breakdown.push({
+
+            min:tier.min,
+
+            max:tier.max,
+
+            amount:tier.allocated,
+
+            rate:tier.rate,
+
+            interest
+
+        });
+
     });
 
-    // Smooth scroll to results
-    banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }
+    const list =
+    Object.values(grouped)
+    .sort(
+        (a,b)=>
+        b.totalAlloc - a.totalAlloc
+    );
 
-  // Allow Enter key
-  document.getElementById('amountInput').addEventListener('keydown', e => { if (e.key === 'Enter') calculate(); });
+    renderResults(
+        list,
+        totalSavings
+    );
+
+}
+
+/* ======================================================
+   RENDER
+====================================================== */
+
+function renderResults(
+    list,
+    totalSavings
+){
+
+    const totalInterest =
+    list.reduce(
+        (sum,item)=>
+        sum + item.totalInterest,
+        0
+    );
+
+    document.getElementById(
+        "dashboardPrincipal"
+    ).innerHTML =
+
+    `฿${totalSavings.toLocaleString()}`;
+
+    document.getElementById(
+        "dashboardTotalInterest"
+    ).innerHTML =
+
+    `฿${totalInterest.toLocaleString(
+        undefined,
+        {
+            minimumFractionDigits:2
+        }
+    )}`;
+
+    const resultPanel =
+    document.getElementById(
+        "resultPanel"
+    );
+
+    resultPanel.innerHTML = list.map(bank=>`
+
+        <div class="result-card">
+
+            <div class="flex items-center gap-4 mb-6">
+
+                <div class="
+                    ${bank.colorTheme}
+                    w-14 h-14
+                    rounded-2xl
+                    text-white
+                    font-black
+                    text-lg
+                    flex items-center justify-center
+                ">
+
+                    ${bank.shortName}
+
+                </div>
+
+                <div>
+
+                    <h3 class="text-2xl font-bold">
+
+                        ${bank.name}
+
+                    </h3>
+
+                    <p class="text-sm text-slate-500">
+
+                        บัญชีเงินฝากดิจิทัล
+
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-4 mb-5">
+
+                <div class="metric">
+
+                    <div class="text-xs uppercase font-bold text-slate-400 mb-2">
+
+                        จำนวนเงินฝาก
+
+                    </div>
+
+                    <div class="text-3xl font-black">
+
+                        ฿${bank.totalAlloc.toLocaleString()}
+
+                    </div>
+
+                </div>
+
+                <div class="metric">
+
+                    <div class="text-xs uppercase font-bold text-emerald-500 mb-2">
+
+                        ดอกเบี้ยที่ได้รับ
+
+                    </div>
+
+                    <div class="text-3xl font-black text-emerald-500">
+
+                        ฿${bank.totalInterest.toLocaleString(
+                            undefined,
+                            {
+                                minimumFractionDigits:2
+                            }
+                        )}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="breakdown">
+
+                <div class="font-bold mb-4">
+
+                    รายละเอียดดอกเบี้ย
+
+                </div>
+
+                <div class="space-y-3">
+
+                    ${bank.breakdown.map(item=>`
+
+                        <div class="text-sm leading-7 text-slate-500">
+
+                            • เงินช่วง
+
+                            <strong class="text-slate-700">
+
+                                ${item.min.toLocaleString()}
+                                -
+                                ${
+                                    item.max === Infinity
+                                    ? "∞"
+                                    : item.max.toLocaleString()
+                                }
+
+                            </strong>
+
+                            บาท จำนวน
+
+                            <strong class="text-slate-700">
+
+                                ${item.amount.toLocaleString()}
+
+                            </strong>
+
+                            บาท ได้ดอกเบี้ย
+
+                            <strong class="text-blue-500">
+
+                                ${item.rate.toFixed(2)}%
+
+                            </strong>
+
+                            คิดเป็น
+
+                            <strong class="text-emerald-500">
+
+                                ฿${item.interest.toLocaleString(
+                                    undefined,
+                                    {
+                                        minimumFractionDigits:2
+                                    }
+                                )}
+
+                            </strong>
+
+                        </div>
+
+                    `).join("")}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    `).join("");
+
+}
+
+runAllocation();
+
 </script>
+
 </body>
 </html>
